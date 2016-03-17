@@ -1103,6 +1103,8 @@ declare @DistinctProductVariant bigint
 declare @Send int
 declare @AXStore varchar(10)
 declare @Total int
+declare @Row_num int
+declare @Rows int
 declare Outer_Cursor cursor for
 
 select 
@@ -1113,6 +1115,8 @@ d.DistinctProductVariant
 ,d.Color
 ,d.Size
 ,d.OnHand
+,row_number() over(order by d.itemid,d.axteam,d.player,d.color,d.size)
+,count(*) over(partition by 1)
 from #DCInv d
 	join
 		(
@@ -1138,11 +1142,15 @@ from #DCInv d
 	
 open Outer_Cursor
 fetch next from Outer_Cursor into 
-	@DistinctProductvariant,@ItemId,@AXTeam,@Player,@Color,@Size,@DCOnHand
+	@DistinctProductvariant,@ItemId,@AXTeam,@Player,@Color,@Size,@DCOnHand,@Row_num,@Rows
 
 	---------Begin outer loop-------------
 	While @@FETCH_STATUS = 0
 	begin
+
+	set @progress =( 'Cursor Progress: ' + cast(@row_num as varchar) + ' of ' + cast(@Rows as varchar)) --print progress
+	RAISERROR (@progress, 10, 1) WITH NOWAIT
+
 		declare Inner_Cursor cursor for
 			select
 			AXStore
