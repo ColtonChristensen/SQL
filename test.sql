@@ -15,5 +15,5 @@ from sandbox.fanzz.amazon a
 					on i.retailvariantid = a.retailvariantid
 						and a.date = aa.date
 					where itemid = '100083648'
-order by itemid,axteam,player,color,channel
+order by itemid,axteam,player,color,channel,nothing
 
