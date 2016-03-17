@@ -199,6 +199,10 @@ BEGIN
 DROP TABLE #Size_Scale
 END;
 
+IF OBJECT_ID('tempdb..#Date') IS NOT null
+BEGIN
+DROP TABLE #Date
+END;
 -----------------------------------------------
 ------Set end dates for expired levels---------
 -----------------------------------------------
